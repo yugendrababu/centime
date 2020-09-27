@@ -34,7 +34,7 @@ function Expenses(){
     const [incomeList,setIncomeList] =useState({});
     const [totalAmount, setTotalAmount]=useState(0);
     const [open, setOpen] = useState(false);
-    const [contributionList,setContributionList] =useState([['From','To,','Weight']]);
+    const [contributionList,setContributionList] =useState([['From','To,','cash']]);
    const cashFlowData = useSelector(state => state.cashFlow.cashFlowData);
     useEffect(()=>{
         if(cashFlowData.length){
@@ -84,11 +84,8 @@ function Expenses(){
     }
     const saveValues =()=>{
         dispatch(actions.saveSankeyData(contributionList));
-        setDisabledSubmit();
+        setDisabledSubmit(true);
     }
-    // const clearValues = ()=>{
-    //     i18n.changeLanguage("fr");
-    // }
     const addIncomeDetails= () =>{
         if(parseInt(amount)>incomeList[selectedOption]){
             handleOpen();
