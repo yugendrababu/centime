@@ -61,3 +61,18 @@
   width: 75px;
   height: 42px;
 }
+
+.MuiAppBar-colorTransparent{
+  color: white !important;
+  background-color: #3a4a6e !important;
+  border-radius: 5px !important;
+}
+.MuiToolbar-regular{
+  min-height: 44px !important;
+}
+
+.paddingBottom{
+  padding-bottom: 10px;
+  padding-right: 10px;
+  padding-left: 15px ;
+}

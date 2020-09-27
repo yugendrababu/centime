@@ -4,16 +4,22 @@ import Grid from '@material-ui/core/Grid';
 import { useSelector } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
 import { useTranslation } from "react-i18next";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
 
 function Customchart() {
     const data = useSelector(state => state.cashFlow.sankeyData);
     const [t] = useTranslation();
   return (
-    <Grid container style={{overflowY: 'scroll'}} alignItems="stretch">
+    <Grid container  alignItems="stretch">
       <Grid item xs={12}>
-        <Typography  className="customChart" variant="h6">
-          Sankey Diagram
-        </Typography>
+        <AppBar position="static" color="transparent">
+                <Toolbar>
+                    <Typography variant="h6">
+                      Sankey Diagram
+                   </Typography>
+                </Toolbar>
+            </AppBar>
       </Grid>
       <Grid item xs={12}>
         {!data&&<Typography   className="customChart" variant="subtitle2">

@@ -12,6 +12,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
 
 function Income(){
     const dispatch = useDispatch();
@@ -49,11 +51,13 @@ function Income(){
     return(
         <Grid  container >
             <Grid item xs={12}>
-                <div style={{paddingLeft:16}} >
-                <Typography variant="h6">
-                {t("Enter the Income Details") }
-                </Typography>
-                </div>
+            <AppBar position="static" color="transparent">
+                <Toolbar>
+                    <Typography variant="h6">
+                    {t("Enter the Income Details") }
+                    </Typography>
+                </Toolbar>
+            </AppBar>
             </Grid>
             <Grid item xs={12}>
                 <div className="TextFieldPadding">

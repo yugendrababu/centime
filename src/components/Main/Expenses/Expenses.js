@@ -15,6 +15,8 @@ import { useDispatch } from "react-redux";
 import * as actions from '../../../redux/actions/actions';
 import { useTranslation } from "react-i18next";
 import { useSelector } from 'react-redux';
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
 
 
 
@@ -117,11 +119,13 @@ function Expenses(){
     return(
         <Grid  container >
             <Grid item xs={12}>
-                <div style={{paddingLeft:16}} >
-                <Typography variant="h6">
-                {t("Enter the Expense Details") }
-                </Typography>
-                </div>
+                <AppBar position="static" color="transparent">
+                <Toolbar>
+                    <Typography variant="h6">
+                    {t("Enter the Expense Details") }
+                    </Typography>
+                </Toolbar>
+            </AppBar>
             </Grid>
             <Grid item xs={12}>
                 <div style={{paddingLeft:16}} >

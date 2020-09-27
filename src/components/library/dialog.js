@@ -7,6 +7,8 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import { useTranslation } from "react-i18next";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -15,11 +17,9 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: theme.palette.background.paper,
         //border: '2px solid #000',
         boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
         top: "50%",
         left: "50%",
         transform: `translate(-50%, -50%)`,
-        paddingLeft:5
     }
 }));
 
@@ -126,23 +126,29 @@ export default function CustomModal(props) {
         aria-describedby="simple-modal-description"
     >
          <div className={classes.paper}>
-            <Grid style={{paddingLeft:5}} container spacing={1}>
+            <Grid  container >
                <Grid item xs={12}>
+                   <div style={{paddingBottom:10}}>
+                   <AppBar position="static" color="transparent">
+                        <Toolbar>
+                            <Typography variant="button" display="block" style={{fontWeight:700}}>
+                            {`${t('Amount Exceeded current income Source')} ::`}
+                            </Typography>
+                        </Toolbar>
+                    </AppBar>
+                   </div>
                     <div  >
-                    <Typography variant="button" display="block" style={{fontWeight:700}}>
-                    {`${t('Amount Exceeded current income Source')} ::`}
-                    </Typography>
-                    <Typography variant="subtitle2" display="block">
+                    <Typography className="paddingBottom" variant="subtitle2" display="block">
                     {`${t('Contributed Income source(s)')} : ${incomeSources}` }
                     </Typography>
-                    <Typography variant="subtitle2" display="block">
+                    <Typography className="paddingBottom" variant="subtitle2" display="block">
                     {`${t('Current Expense(s)')} : | ${name} : ${amount} | ` }
                     </Typography>
-                   { enableDropdown ? <Typography variant="caption" display="block">
+                   { enableDropdown ? <Typography className="paddingBottom" variant="caption" display="block">
                     {`${t('Expense not valid. Please select another income')} :`}
                     </Typography>
                     : 
-                    <Typography variant="caption" display="block">
+                    <Typography className="paddingBottom" variant="caption" display="block">
                     {`${t('Expense is valid. Please continue to add')} :`}
                     </Typography>
                     }
@@ -150,14 +156,14 @@ export default function CustomModal(props) {
                 </Grid>
                 <Grid item xs={12}>
                {enableDropdown&&
-                <TextField
+                <div className="paddingBottom">
+                    <TextField
                         id="outlined-select-expense"
                         select
                         label={t("Select")}
                         value={selectedOption}
                         size="small" 
                         onChange={handleOptionChange}
-                        className="TextFieldPaddingRight"
                         helperText={t("Select income source")}
                         variant="outlined"
                         >
@@ -166,8 +172,9 @@ export default function CustomModal(props) {
                             {option.label}
                             </MenuItem>
                         ))}
-                </TextField>}
-
+                   </TextField>
+                </div>
+                }
                 </Grid>
                 <Grid item xs={12}>
                 <Grid container>
