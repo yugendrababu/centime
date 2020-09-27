@@ -1,0 +1,4 @@
+export default {
+    'SAVE_CASH_FLOW_DATA': 'SAVE_CASH_FLOW_DATA',
+    'SAVE_SANKEY_DATA':'SAVE_SANKEY_DATA'
+  };

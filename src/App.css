@@ -1,38 +1,63 @@
-.App {
-  text-align: center;
+* {
+  scrollbar-width: thin;
+  scrollbar-color:rgba(82, 82, 82, 0.76);
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+*::-webkit-scrollbar {
+  width: 9px;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+*::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+*::-webkit-scrollbar-thumb {
+  background-color:rgba(82, 82, 82, 0.76);
+  border-radius: 27px;
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  background-color: #404c64;
+    display: flex;
+    padding: 13px;
+    flex-direction: row;
+    justify-content: left;
+    /* color: white; */
+    height: 70px;
 }
 
 .App-link {
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.TextFieldPadding {
+  padding: 15px 15px 0 15px;
+}
+
+.TextFieldPaddingRight{
+  padding-right: 15px !important;
+}
+
+.incomePaperSytle{
+  margin-top: 20px;
+  margin-left: 10px;
+}
+.listItems{
+  height: 110px;
+  overflow-y: scroll;
+}
+
+.customChart{
+  padding: 10px;
+}
+.paperStyle{
+  margin-top: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+  height: 94%;
+}
+.language{
+  width: 98px;
+  height: 46px;
+}
+.resetButton{
+  width: 75px;
+  height: 42px;
 }
