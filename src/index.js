@@ -21,8 +21,7 @@ i18n
     fallbackLng: "en",
     interpolation: {
       escapeValue: false
-    },
-    debug:true
+    }
   });
 
 const store = configureStore(); // create redux store 

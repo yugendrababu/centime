@@ -41,7 +41,11 @@ function Expenses(){
             const localList={};
             let localTotalAmount=0;
             cashFlowData.map((data)=>{
-                localList[data.name]=parseInt(data.amount);
+                if(localList[data.name]){
+                    localList[data.name]+=parseInt(data.amount);
+                }else{
+                    localList[data.name]=parseInt(data.amount);
+                }
                 localTotalAmount+=parseInt(data.amount);
                 return '';
             })
@@ -86,20 +90,57 @@ function Expenses(){
         dispatch(actions.saveSankeyData(contributionList));
         setDisabledSubmit(true);
     }
+    const updateOptions = (value,balance) =>{
+        let localOptions=[];
+        for (var i = 0; i < options.length; i++) {
+            if (options[i].label === value) {
+                if(balance){
+                    localOptions.push({label:options[i].label,value:balance});
+                }
+            }
+            else{
+                localOptions.push({label:options[i].label,value:options[i].value});
+            }
+        }
+        setOptions(localOptions);         
+    }
     const addIncomeDetails= () =>{
-        if(parseInt(amount)>incomeList[selectedOption]){
+        let localAmount = parseInt(amount);
+        if(totalAmount<localAmount){
+            let text = '';
+            const dues = totalAmount-localAmount;
+            Object.keys(incomeList).map((key)=>{
+                contributionList.push([`${key}`,`${name}`,incomeList[key]]);
+                setContributionList(contributionList);
+                text+=`| ${key} : ${incomeList[key]} | ` 
+            })
+            text+=`, Dues=| ${dues} |`
+            listItems.push({name,amount,expenseDetails:text});
+            setListItems([...listItems]);
+            setIncomeList({});
+            setTotalAmount(dues);
+            setToIntitalState();
+            return;
+        }
+        if(localAmount>incomeList[selectedOption]&&totalAmount>=localAmount){
             handleOpen();
             return;
         }
-        contributionList.push([`${selectedOption}`,`${name}`,parseInt(amount)]);
+        contributionList.push([`${selectedOption}`,`${name}`,localAmount]);
         setContributionList(contributionList)
-        listItems.push({name,amount});
-        setTotalAmount((previousState=>previousState-parseInt(amount)));
+        listItems.push({name,amount,selectedOption});
+        setTotalAmount((previousState=>previousState-localAmount));
         setListItems([...listItems]);
         setToIntitalState();
-        incomeList[selectedOption]=incomeList[selectedOption]-parseInt(amount);
+        const remainingAmount =incomeList[selectedOption]-localAmount
+        if(remainingAmount){
+            incomeList[selectedOption]=incomeList[selectedOption]-localAmount;
+            updateOptions(selectedOption,remainingAmount)
+        }else{
+            delete incomeList[selectedOption];
+            updateOptions(selectedOption)
+        }
         setIncomeList(incomeList);
-         console.log(incomeList);
     }
     const addExpenseDetails= (data)=>{
         const {expenseDetails,contributionList:list,options:updatedOptions,currentIncomeList} =data;
@@ -112,7 +153,15 @@ function Expenses(){
         setIncomeList(currentIncomeList);
         console.log(expenseDetails,list,updatedOptions)
     }
-
+    const getValue = (value,option)=>{
+        if(value&&!option){
+            return `(From : ${value})`
+        }
+        if(value&&option){
+            return ', '+t("Expense")+' '+t("Split")+' = '+value;
+        }
+        return '';
+    }
     return(
         <Grid  container >
             <Grid item xs={12}>
@@ -141,8 +190,11 @@ function Expenses(){
                         label={t("Enter Name")} 
                         value={name}
                         variant="outlined"
+                        inputProps={{
+                            'data-testid': 'expenseName'
+                          }}
                         size="small" 
-                        disabled={disabled}
+                        disabled={disabled||!(totalAmount>1)}
                         className="TextFieldPaddingRight"
                         onChange={handleChange('name')} />
                    <TextField
@@ -150,12 +202,15 @@ function Expenses(){
                         select
                         label={t("Select")}
                         value={selectedOption}
-                        size="small" 
+                        size="small"
+                        inputProps={{
+                            'data-testid': 'expenseSource'
+                          }} 
                         onChange={handleOptionChange}
                         className="TextFieldPaddingRight"
                         helperText={t("Select income source")}
                         variant="outlined"
-                        disabled={disabled}
+                        disabled={disabled ||!(totalAmount>1)}
                         >
                         {options.map((option) => (
                             <MenuItem key={option.label} value={option.label}>
@@ -168,15 +223,18 @@ function Expenses(){
                         variant="outlined"  
                         label={t("Enter Amount")}
                         type="number"
-                        size="small" 
+                        size="small"
+                        inputProps={{
+                            'data-testid': 'expenseAmount'
+                          }}
                         className="TextFieldPaddingRight"
-                        disabled={disabled}
+                        disabled={disabled||!(totalAmount>1)}
                         value={amount} 
                         onChange={handleChange('amount')} />
                     <Button 
                         variant="contained" 
                         color="primary"
-                        disabled={!(name&&amount)} 
+                        disabled={!(name&&amount&&selectedOption)} 
                         size="medium"  
                         onClick={addIncomeDetails}>
                             ADD
@@ -190,7 +248,7 @@ function Expenses(){
                         {listItems.map((value,index)=>(
                             <ListItem key={index}>
                                 <ListItemText
-                                primary={`${t("Expense")} (${index+1}) : ${value.name} , ${value.amount}  ${value.expenseDetails?', '+t("Expense")+' '+t("Split")+' = '+value.expenseDetails :  selectedOption}`}
+                                primary={`${t("Expense")} (${index+1}) : ${value.name} , ${value.amount} ${value.expenseDetails? getValue(value.expenseDetails,true) : getValue(value.selectedOption)}`}
                                 />
                                 {/* <ListItemSecondaryAction onClick={()=>{deleteItem(index)}}>
                                     <IconButton edge="end" aria-label="delete">

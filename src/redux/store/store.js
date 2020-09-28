@@ -13,8 +13,8 @@ const reducers = combineReducers({
   cashFlow:cashFlowReducer
 });
 
-export default function configureStore() {
-  const store = createStore(reducers,initialState,
+export default function configureStore(localInitialState) {
+  const store = createStore(reducers,localInitialState||initialState,
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
     );
   return store;

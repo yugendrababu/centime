@@ -65,7 +65,7 @@
 .MuiAppBar-colorTransparent{
   color: white !important;
   background-color: #3a4a6e !important;
-  border-radius: 5px !important;
+  border-radius: 2px !important;
 }
 .MuiToolbar-regular{
   min-height: 44px !important;

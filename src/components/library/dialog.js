@@ -90,9 +90,7 @@ export default function CustomModal(props) {
                 }else{
                     currentIncomeList[value]=balance;
                 }
-
                 setCurrentIncomeList({...currentIncomeList});
-                console.log(balance,contribution,contributionList)
             }else{
                 contributionList.push([`${value}`,`${name}`,currentIncomeList[value]]);
                 setContributionList(contributionList);
@@ -162,6 +160,9 @@ export default function CustomModal(props) {
                         select
                         label={t("Select")}
                         value={selectedOption}
+                        inputProps={{
+                            'data-testid': 'dialogSelect'
+                          }}
                         size="small" 
                         onChange={handleOptionChange}
                         helperText={t("Select income source")}
@@ -183,7 +184,9 @@ export default function CustomModal(props) {
                             <Button 
                                 variant="contained" 
                                 color="primary"
+                                data-testid= 'dialogAddButton'
                                 size="small" 
+                                disabled={enableDropdown}
                                 onClick={addExpense}>
                                     Add
                             </Button>

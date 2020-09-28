@@ -66,6 +66,9 @@ function Income(){
                     label={t("Enter Name")} 
                     size="small"
                     value={name}
+                    inputProps={{
+                        'data-testid': 'incomeName'
+                      }}
                     variant="outlined"
                     className="TextFieldPaddingRight"
                     onChange={handleChange('name')} />
@@ -75,6 +78,10 @@ function Income(){
                     label={t("Enter Amount")}
                     size="small" 
                     type="number"
+                    inputProps={{
+                        min:1,
+                        'data-testid': 'incomeAmount'
+                    }}
                     className="TextFieldPaddingRight"
                     value={amount} 
                     onChange={handleChange('amount')} />
@@ -115,7 +122,7 @@ function Income(){
                             <Button 
                                 variant="contained" 
                                 color="primary"
-                                size="small" 
+                                size="small"
                                 disabled={!(listItems.length>1)||disabled} 
                                 onClick={saveValues}>
                                     Save Info

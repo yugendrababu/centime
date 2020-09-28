@@ -33,7 +33,7 @@ function Customchart() {
             chartType="Sankey"
             loader={<div>Loading Chart</div>}
             data={data}
-            rootProps={{ 'data-testid': '1' }}
+            rootProps={{ 'data-testid': 'sankeyChartCustom' }}
             />}
         </div>
       </Grid>

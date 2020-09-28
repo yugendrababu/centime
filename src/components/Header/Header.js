@@ -57,6 +57,9 @@ function Header() {
                 size="small" 
                 onChange={handleOptionChange}
                 variant="filled"
+                inputProps={{
+                  'data-testid': 'languageSelect'
+                }}
                 InputProps={{
                   disableUnderline:true
                 }}
