@@ -35,7 +35,8 @@ function Expenses(){
     const [totalAmount, setTotalAmount]=useState(0);
     const [open, setOpen] = useState(false);
     const [contributionList,setContributionList] =useState([['From','To,','cash']]);
-   const cashFlowData = useSelector(state => state.cashFlow.cashFlowData);
+    const cashFlowData = useSelector(state => state.cashFlow.cashFlowData);
+    const modifiedExpenseData = useSelector(state=>state.cashFlow.modifiedExpenseData);
     useEffect(()=>{
         if(cashFlowData.length){
             const localList={};
@@ -60,6 +61,19 @@ function Expenses(){
             setOptions([...localOptions]);
         }
     },[cashFlowData])
+    useEffect(()=>{
+        if(modifiedExpenseData){
+            const {expenseDetails,contributionList:list,options:updatedOptions,currentIncomeList} =modifiedExpenseData;
+            setContributionList(list)
+            listItems.push({name,amount,expenseDetails});
+            setTotalAmount((previousState=>previousState-parseInt(amount)));
+            setListItems([...listItems]);
+            setToIntitalState();
+            setOptions(updatedOptions)
+            setIncomeList(currentIncomeList);
+            console.log(expenseDetails,list,updatedOptions)
+        }
+    } ,[modifiedExpenseData] )
     const handleOptionChange =  (event) => {
         const value = event.target.value
         if(value){
@@ -143,15 +157,7 @@ function Expenses(){
         setIncomeList(incomeList);
     }
     const addExpenseDetails= (data)=>{
-        const {expenseDetails,contributionList:list,options:updatedOptions,currentIncomeList} =data;
-        setContributionList(list)
-        listItems.push({name,amount,expenseDetails});
-        setTotalAmount((previousState=>previousState-parseInt(amount)));
-        setListItems([...listItems]);
-        setToIntitalState();
-        setOptions(updatedOptions)
-        setIncomeList(currentIncomeList);
-        console.log(expenseDetails,list,updatedOptions)
+
     }
     const getValue = (value,option)=>{
         if(value&&!option){

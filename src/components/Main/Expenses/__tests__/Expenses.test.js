@@ -35,7 +35,8 @@ const data = [
 const initialState = {
     cashFlow: {
         cashFlowData: data,
-        sankeyData:''
+        sankeyData:'',
+        modifiedExpenseData:''
     }
 };
 const store = configureStore(initialState);
@@ -194,7 +195,63 @@ test('test for listItem', () => {
       const listItem =getByText("Expense (1) : bill , 9000 (From : stocks)")
       expect(listItem).toBeInTheDocument();
 })
-
+test('test for full expense test', () => {
+    const { getByTestId ,getByText ,content } = render(
+        <Provider store={store}> 
+          <Expenses />
+        </Provider>
+      );
+      const nameInput = getByTestId('expenseName');
+      const amountInput = getByTestId('expenseAmount');
+      const addButton = getByText(/ADD/i);
+      const selectInput = getByTestId('expenseSource');
+      fireEvent.change(nameInput, { target: { value: 'bill' } });
+      fireEvent.change(selectInput, { target: { value: 'stocks' } });
+      fireEvent.change(amountInput, { target: { value: 20000 } });
+      fireEvent.click(addButton);
+      const listItem =getByText("Expense (1) : bill , 20000 (From : stocks)")
+      expect(listItem).toBeInTheDocument();
+})
+test('test for amount > current source  test', () => {
+    const { getByTestId ,getByText ,content } = render(
+        <Provider store={store}> 
+          <Expenses />
+        </Provider>
+      );
+      const nameInput = getByTestId('expenseName');
+      const amountInput = getByTestId('expenseAmount');
+      const addButton = getByText(/ADD/i);
+      const selectInput = getByTestId('expenseSource');
+      fireEvent.change(nameInput, { target: { value: 'bill' } });
+      fireEvent.change(selectInput, { target: { value: 'stocks' } });
+      fireEvent.change(amountInput, { target: { value: 21000 } });
+      fireEvent.click(addButton);
+})
+test('test for amount > current source  test', () => {
+    const { getByTestId ,getByText ,content } = render(
+        <Provider store={store}> 
+          <Expenses />
+        </Provider>
+      );
+      const nameInput = getByTestId('expenseName');
+      const amountInput = getByTestId('expenseAmount');
+      const addButton = getByText(/ADD/i);
+      const selectInput = getByTestId('expenseSource');
+      fireEvent.change(nameInput, { target: { value: 'bill' } });
+      fireEvent.change(selectInput, { target: { value: 'stocks' } });
+      fireEvent.change(amountInput, { target: { value: 31000 } });
+      fireEvent.click(addButton);
+      const Item =getByText((content, node) => {
+        const hasText = (node) => node.textContent === "Total available amount : -1000";
+        const nodeHasText = hasText(node);
+        const childrenDontHaveText = Array.from(node.children).every(
+          (child) => !hasText(child)
+        );
+    
+        return nodeHasText && childrenDontHaveText;
+      });
+      expect(Item).toBeInTheDocument();
+})
 test('test for submit button', () => {
     const { getByText } = render(
       <Provider store={store}> 

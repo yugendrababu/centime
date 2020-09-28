@@ -9,6 +9,9 @@ import Button from '@material-ui/core/Button';
 import { useTranslation } from "react-i18next";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
+import * as actions from '../../redux/actions/actions';
+import { useDispatch } from "react-redux";
+
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -24,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function CustomModal(props) {
+  const dispatch = useDispatch();
   const {openState,incomeList,currentIncomeSource,resetModal,addExpenseDetails} = props;
   const {currentExpense:{ name , amount },currentContributionList} =props;
   const classes = useStyles();
@@ -108,12 +112,13 @@ export default function CustomModal(props) {
         setIncomeSources('')
     }
     const addExpense = () =>{
-        addExpenseDetails({
+        const data= {
             expenseDetails:incomeSources,
             contributionList,
             options,
             currentIncomeList
-        })
+        }
+        dispatch(actions.sendExpenseData(data))
         cancelExpense();
     }
   return (

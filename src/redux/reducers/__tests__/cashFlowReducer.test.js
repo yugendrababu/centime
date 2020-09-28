@@ -7,7 +7,8 @@ describe('cash flow reducer', () => {
       expect(cashFlowReducer(undefined, {})).toEqual(
        {
            "cashFlowData": {}, 
-           "sankeyData": ""
+           "sankeyData": "",
+           "modifiedExpenseData":''
        })
     })
   
@@ -45,4 +46,23 @@ describe('cash flow reducer', () => {
                 cashFlowData:{}
             })
     })
+    it('should handle SAVE_SANKEY_DATA', () => {
+      const initialState =        {
+          "cashFlowData": {}, 
+          "sankeyData": "",
+          "modifiedExpenseData":''
+      }
+      const data = {'test':'expenseData'};
+        expect(
+          cashFlowReducer(initialState, {
+              type: constants.SEND_EXPENSE_DATA,
+              payload:data
+            })
+        ).toEqual(
+          {
+              sankeyData:'',
+              cashFlowData:{},
+              modifiedExpenseData:data
+          })
+  })
 })

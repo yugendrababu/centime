@@ -2,6 +2,8 @@ import React from 'react';
 import { render ,fireEvent  ,screen} from '@testing-library/react';
 import CustomModal from '../dialog';
 import i18n from "i18next";
+import configureStore from '../../../redux/store/store';
+import { Provider } from 'react-redux';
 import {initReactI18next  } from "react-i18next";
 import  en from '../../../translations/en';
 import  fr from '../../../translations/fr';
@@ -19,6 +21,7 @@ i18n
       escapeValue: false
     }
   });
+const store = configureStore();
 const incomeList ={
     salary:400,
     stocks:1200,
@@ -29,7 +32,8 @@ const selectedOption='salary'
 const currentExpense={name:'bill',amount:1200};
 const handleClose = jest.fn();
 const addExpenseDetails =jest.fn()
-const component = <CustomModal 
+const component =(<Provider store={store}> 
+   <CustomModal 
     openState={true}
     currentExpense={currentExpense}
     incomeList={incomeList}
@@ -38,6 +42,10 @@ const component = <CustomModal
     currentContributionList={contributionList}
     currentIncomeSource={selectedOption}
 />
+</Provider>
+)
+
+
 
 test('test for Amount Exceeded current income Source text', () => {
   const { getByText } = render(component );
@@ -112,16 +120,18 @@ test('test for add button action', () => {
     fireEvent.click(element);
 })
 test('test for select options amount exceeded', () => {
-    const { getByTestId  } =  render( 
-        <CustomModal 
-        openState={true}
-        currentExpense={{name:'bill',amount:1700}}
-        incomeList={incomeList}
-        resetModal={handleClose}
-        addExpenseDetails={addExpenseDetails}
-        currentContributionList={contributionList}
-        currentIncomeSource={selectedOption}
-    />
+    const { getByTestId  } =  render(
+        <Provider store={store}>  
+            <CustomModal 
+            openState={true}
+            currentExpense={{name:'bill',amount:1700}}
+            incomeList={incomeList}
+            resetModal={handleClose}
+            addExpenseDetails={addExpenseDetails}
+            currentContributionList={contributionList}
+            currentIncomeSource={selectedOption}
+        />
+       </Provider>
      );
     const Input = getByTestId('dialogSelect');
     fireEvent.change(Input, { target: { value: 'stocks' } });

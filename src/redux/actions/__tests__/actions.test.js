@@ -23,3 +23,14 @@ describe('actions', () => {
       expect(actions.saveSankeyData(data)).toEqual(expectedAction)
     })
   })
+
+  describe('actions', () => {
+    it('should create an action to send expense data', () => {
+      const data = {'test':'expense Data'}
+      const expectedAction = {
+        type: constants.SEND_EXPENSE_DATA,
+        payload:data
+      }
+      expect(actions.sendExpenseData(data)).toEqual(expectedAction)
+    })
+  })
