@@ -171,7 +171,7 @@ test('test for clear info text', () => {
 })
 
 test('test for clear info button', () => {
-  const { content, getByTestId, getByText } = render(
+  const { getByTestId, getByText } = render(
     <Provider store={store}>
       <Income />
     </Provider>
