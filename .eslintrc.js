@@ -25,6 +25,21 @@ module.exports = {
         "navigator": "readonly",
         "window": "readonly"
       },
+      "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended"  
+      ],
+      "overrides": [
+        {
+          "files": [
+            "**/*.test.js",
+            "**/*.test.jsx"
+          ],
+          "env": {
+            "jest": true
+          }
+        }
+      ],
     
       "rules": {
         "accessor-pairs": "error",
@@ -212,4 +227,5 @@ module.exports = {
         "promise/param-names": "error",
     
         "standard/no-callback-literal": "error"
+      }
 };
