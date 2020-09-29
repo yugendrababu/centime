@@ -14,6 +14,7 @@ import IconButton from '@material-ui/core/IconButton'
 import DeleteIcon from '@material-ui/icons/Delete'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
+import EditIcon from '@material-ui/icons/Edit'
 
 function Income () {
   const dispatch = useDispatch()
@@ -21,6 +22,7 @@ function Income () {
   const [name, setName] = useState('')
   const [amount, setAmount] = useState('')
   const [listItems, setListItems] = useState([])
+  const [enableEdit, setEnableEdit] = useState(false)
   const [disabled, setDisabled] = useState(false)
   const handleChange = (option) => (event) => {
     const value = event.target.value
@@ -42,10 +44,19 @@ function Income () {
     setListItems([...listItems])
     setName('')
     setAmount('')
+    if (enableEdit) {
+      setEnableEdit(false)
+    }
   }
   const deleteItem = (currentIndex) => {
     listItems.splice(currentIndex, 1)
     setListItems([...listItems])
+  }
+  const editItem = (index) => {
+    setName(listItems[index].name)
+    setAmount(listItems[index].amount)
+    setEnableEdit(true)
+    deleteItem(index)
   }
   return (
     <Grid container >
@@ -90,7 +101,8 @@ function Income () {
             disabled={!(name && amount)}
             size="medium"
             onClick={addIncomeDetails}>
-                            ADD
+            {enableEdit ? 'EDIT' : 'ADD'}
+
           </Button>
         </div>
       </Grid>
@@ -103,7 +115,10 @@ function Income () {
                 <ListItemText
                   primary={`${t('Income Source')} (${index + 1}) : ${value.name} , ${value.amount}`}
                 />
-                {!disabled && <ListItemSecondaryAction onClick={() => { deleteItem(index) }}>
+                {!disabled && <IconButton onClick={() => { editItem(index) }} edge="end" className='editItem' aria-label="delete">
+                  <EditIcon />
+                </IconButton>}
+                {!disabled && <ListItemSecondaryAction onClick={() => { deleteItem(index) }} >
                   <IconButton edge="end" aria-label="delete">
                     <DeleteIcon />
                   </IconButton>

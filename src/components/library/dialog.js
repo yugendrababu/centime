@@ -29,17 +29,17 @@ const useStyles = makeStyles((theme) => ({
 export default function CustomModal (props) {
   const dispatch = useDispatch()
   const { openState, incomeList, currentIncomeSource, resetModal } = props
-  const { currentExpense: { name, amount }, currentContributionList } = props
+  const { currentExpense: { name, amount }, currentExpenseList } = props
   const classes = useStyles()
   const [t] = useTranslation()
   const [open, setOpen] = useState(openState)
   const [options, setOptions] = useState([])
   const [selectedOption, setSelectedOption] = useState('')
-  const [incomeSources, setIncomeSources] = useState(`${currentIncomeSource} :  `)
+  const [incomeSources, setIncomeSources] = useState('')
   const [enableDropdown, setEnableDropdown] = useState(true)
   const [currentIncomeList, setCurrentIncomeList] = useState({})
   const [totalIncome, setTotalIncome] = useState(0)
-  const [contributionList, setContributionList] = useState(currentContributionList)
+  const [expensesList, setExpensesList] = useState(currentExpenseList)
 
   useEffect(() => {
     const localOptions = []
@@ -50,13 +50,44 @@ export default function CustomModal (props) {
       localCurrentIncomeList[key] = incomeList[key]
       return ''
     })
-    contributionList.push([`${currentIncomeSource}`, `${name}`, incomeList[currentIncomeSource]])
-    setContributionList(contributionList)
-    setIncomeSources(`| ${currentIncomeSource} : ${incomeList[currentIncomeSource]} | `)
+    updateExpenseList(currentIncomeSource, name, incomeList[currentIncomeSource])
     setTotalIncome(incomeList[currentIncomeSource])
     setCurrentIncomeList({ ...localCurrentIncomeList })
     setOptions([...localOptions])
   }, [incomeList])
+
+  const updateExpenseList = (incomeName, expenseName, currentAmount) => {
+    let localExpensesList = { ...expensesList }
+    if (localExpensesList[expenseName]) {
+      localExpensesList[expenseName].push({ incomeName, amount: currentAmount })
+    } else {
+      localExpensesList = {
+        ...localExpensesList,
+        [expenseName]: [{ incomeName, amount: currentAmount }]
+      }
+    }
+    const localIncomeSources = { ...incomeSources }
+    localIncomeSources.text = `| ${incomeName} : ${currentAmount} | `
+    setIncomeSources(localIncomeSources)
+    setExpensesList(localExpensesList)
+  }
+  const updateIncomeSources = (incomeName, expenseName, currentAmount) => {
+    const localIncomeSources = { ...incomeSources }
+    if (localIncomeSources.text) {
+      localIncomeSources.text += `${incomeName} : ${currentAmount} | `
+    } else {
+      localIncomeSources.text = `| ${incomeName} : ${currentAmount} | `
+    }
+    if (localIncomeSources.data && localIncomeSources.data[expenseName]) {
+      localIncomeSources.data[expenseName].push({ incomeName, amount: currentAmount })
+    } else {
+      localIncomeSources.data = {
+        ...localIncomeSources.data,
+        [expenseName]: [{ incomeName, amount: currentAmount }]
+      }
+    }
+    setIncomeSources(localIncomeSources)
+  }
   const updateOptions = (value, balance) => {
     const localOptions = []
     for (var i = 0; i < options.length; i++) {
@@ -74,15 +105,12 @@ export default function CustomModal (props) {
   const handleOptionChange = (event) => {
     const value = event.target.value
     if (value) {
-      // setTotalIncome(incomeList[currentIncomeSource]);
       const income = totalIncome + currentIncomeList[value]
       if (income >= parseInt(amount)) {
         const balance = income - totalIncome - (parseInt(amount) - totalIncome)
         const contribution = currentIncomeList[value] - balance
         setEnableDropdown(false)
-        contributionList.push([`${value}`, `${name}`, contribution])
-        setContributionList(contributionList)
-        setIncomeSources((previousState) => `${previousState} ${value} : ${contribution} | `)
+        updateIncomeSources(value, name, contribution)
         updateOptions(value, balance)
         setSelectedOption(value)
         if (balance <= 0) {
@@ -92,12 +120,12 @@ export default function CustomModal (props) {
         }
         setCurrentIncomeList({ ...currentIncomeList })
       } else {
-        contributionList.push([`${value}`, `${name}`, currentIncomeList[value]])
-        setContributionList(contributionList)
-        setIncomeSources((previousState) => `${previousState} ${value} : ${currentIncomeList[value]} | `)
+        updateIncomeSources(value, name, currentIncomeList[value])
         setSelectedOption('')
         updateOptions(value)
         setTotalIncome(income)
+        delete currentIncomeList[value]
+        setCurrentIncomeList({ ...currentIncomeList })
       }
     }
   }
@@ -109,7 +137,7 @@ export default function CustomModal (props) {
   const addExpense = () => {
     const data = {
       expenseDetails: incomeSources,
-      contributionList,
+      expensesList,
       options,
       currentIncomeList
     }
@@ -137,7 +165,7 @@ export default function CustomModal (props) {
               </div>
               <div >
                 <Typography className="paddingBottom" variant="subtitle2" display="block">
-                  {`${t('Contributed Income source(s)')} : ${incomeSources}` }
+                  {`${t('Contributed Income source(s)')} : ${incomeSources.text}` }
                 </Typography>
                 <Typography className="paddingBottom" variant="subtitle2" display="block">
                   {`${t('Current Expense(s)')} : | ${name} : ${amount} | ` }
@@ -205,6 +233,6 @@ CustomModal.propTypes = {
   incomeList: PropTypes.object,
   currentIncomeSource: PropTypes.string,
   resetModal: PropTypes.func,
-  currentContributionList: PropTypes.array,
+  currentExpenseList: PropTypes.object,
   currentExpense: PropTypes.object
 }

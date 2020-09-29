@@ -76,3 +76,9 @@
   padding-right: 10px;
   padding-left: 15px ;
 }
+.editItem{
+  top: 50% !important;
+  right: 56px !important;
+  position: absolute !important;
+  transform: translateY(-50%) !important;
+}

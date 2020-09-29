@@ -11,9 +11,12 @@ import CustomModal from '../../library/dialog'
 import { useDispatch, useSelector } from 'react-redux'
 import * as actions from '../../../redux/actions/actions'
 import { useTranslation } from 'react-i18next'
-
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
+import IconButton from '@material-ui/core/IconButton'
+import DeleteIcon from '@material-ui/icons/Delete'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
+import EditIcon from '@material-ui/icons/Edit'
 
 function Expenses () {
   const dispatch = useDispatch()
@@ -28,10 +31,25 @@ function Expenses () {
   const [incomeList, setIncomeList] = useState({})
   const [totalAmount, setTotalAmount] = useState(0)
   const [open, setOpen] = useState(false)
-  const [contributionList, setContributionList] = useState([['From', 'To,', 'cash']])
+  const [expensesList, setExpensesList] = useState({})
+  // const [contributionList, setContributionList] = useState([{ index: '', data: ['From', 'To,', 'cash'] }])
   const incomeFlowData = useSelector(state => state.cashFlow.incomeFlowData)
   const modifiedExpenseData = useSelector(state => state.cashFlow.modifiedExpenseData)
   useEffect(() => {
+    // const testdata = [
+    //   {
+    //     name: 'salary',
+    //     amount: '10000'
+    //   },
+    //   {
+    //     name: 'stocks',
+    //     amount: '20000'
+    //   },
+    //   {
+    //     name: 'balance',
+    //     amount: '15000'
+    //   }
+    // ]
     if (incomeFlowData.length) {
       const localList = {}
       let localTotalAmount = 0
@@ -57,9 +75,9 @@ function Expenses () {
   }, [incomeFlowData])
   useEffect(() => {
     if (modifiedExpenseData) {
-      const { expenseDetails, contributionList: list, options: updatedOptions, currentIncomeList } = modifiedExpenseData
-      setContributionList(list)
-      listItems.push({ name, amount, expenseDetails })
+      const { expenseDetails, expensesList: list, options: updatedOptions, currentIncomeList } = modifiedExpenseData
+      setExpensesList(list)
+      listItems.push({ name, amount, expenseDetails, selectedOption })
       setTotalAmount(previousState => previousState - parseInt(amount))
       setListItems([...listItems])
       setToIntitalState()
@@ -93,8 +111,24 @@ function Expenses () {
     setAmount('')
     setSelectedOption('')
   }
+  const getValues = (expense, array) => {
+    const list = []
+    array.map(item => {
+      list.push([item.incomeName, expense, parseInt(item.amount)])
+    })
+    return list
+  }
   const saveValues = () => {
-    dispatch(actions.saveSankeyData(contributionList))
+    let contributionList = [['From', 'To,', 'cash']]
+    Object.keys(expensesList).map(key => {
+      contributionList = [...contributionList, ...getValues(key, expensesList[key])]
+    })
+    listItems.map(item => {
+      if (item.expenseDetails && item.expenseDetails.data) {
+        contributionList = [...contributionList, ...getValues(item.name, item.expenseDetails.data[item.name])]
+      }
+    })
+    dispatch(actions.saveSankeyData([...contributionList]))
     if (totalAmount <= 0) {
       setDisabledSubmit(true)
     }
@@ -112,20 +146,40 @@ function Expenses () {
     }
     setOptions(localOptions)
   }
+  const pushToExpenseList = () => {
+    let localExpensesList = { ...expensesList }
+    if (localExpensesList[name]) {
+      localExpensesList[name].push({ incomeName: selectedOption, amount })
+    } else {
+      localExpensesList = {
+        ...localExpensesList,
+        [name]: [{ incomeName: selectedOption, amount }]
+      }
+    }
+    setExpensesList(localExpensesList)
+  }
   const addIncomeDetails = () => {
     const localAmount = parseInt(amount)
     if (totalAmount < localAmount) {
       let text = ''
       const dues = totalAmount - localAmount
+      let localExpensesList = { ...expensesList }
       Object.keys(incomeList).map((key) => {
-        contributionList.push([`${key}`, `${name}`, incomeList[key]])
-        setContributionList(contributionList)
+        if (localExpensesList[name]) {
+          localExpensesList[name].push({ incomeName: key, amount: incomeList[key] })
+        } else {
+          localExpensesList = {
+            ...localExpensesList,
+            [name]: [{ incomeName: key, amount: incomeList[key] }]
+          }
+        }
         text += `| ${key} : ${incomeList[key]} | `
       })
       text += `, Dues=| ${dues} |`
-      listItems.push({ name, amount, expenseDetails: text })
+      listItems.push({ name, amount, expenseDetails: { text } })
       setListItems([...listItems])
       setIncomeList({})
+      setExpensesList(localExpensesList)
       setTotalAmount(dues)
       setToIntitalState()
       return
@@ -134,8 +188,7 @@ function Expenses () {
       handleOpen()
       return
     }
-    contributionList.push([`${selectedOption}`, `${name}`, localAmount])
-    setContributionList(contributionList)
+    pushToExpenseList()
     listItems.push({ name, amount, selectedOption })
     setTotalAmount(previousState => previousState - localAmount)
     setListItems([...listItems])
@@ -149,6 +202,71 @@ function Expenses () {
       updateOptions(selectedOption)
     }
     setIncomeList(incomeList)
+  }
+  const updateExpenseList = (expense, resetInputs) => {
+    let localTotalamount = 0
+    const localOptions = []
+    const copyIncomeList = { ...incomeList }
+    const localExpenseList = { ...expensesList }
+    const localExpense = [...localExpenseList[expense.name]]
+    let currentIndex = ''
+    let currentExpense = 0
+    if (expense.expenseDetails) {
+      expense.expenseDetails.data[expense.name].map((item, index) => {
+        if (copyIncomeList[item.incomeName]) {
+          copyIncomeList[item.incomeName] += parseInt(item.amount)
+        } else {
+          copyIncomeList[item.incomeName] = parseInt(item.amount)
+        }
+        currentExpense += parseInt(item.amount)
+      })
+      currentExpense = expense.amount - currentExpense
+    }
+
+    for (let index = 0; index < localExpense.length; index++) {
+      const element = localExpense[index]
+      if (element.amount === (currentExpense || expense.amount) && element.incomeName === expense.selectedOption) {
+        if (copyIncomeList[expense.selectedOption]) {
+          copyIncomeList[expense.selectedOption] += parseInt(element.amount)
+        } else {
+          copyIncomeList[expense.selectedOption] = parseInt(element.amount)
+        }
+        currentIndex = index
+        break
+      }
+    }
+    localExpense.splice(currentIndex, 1)
+
+    if (localExpense.length) {
+      localExpenseList[expense.name] = localExpense
+    } else {
+      delete localExpenseList[expense.name]
+    }
+
+    Object.keys(copyIncomeList).map(key => {
+      localTotalamount += copyIncomeList[key]
+      localOptions.push({ label: key, value: copyIncomeList[key] })
+    })
+    setIncomeList(copyIncomeList)
+    setTotalAmount(localTotalamount)
+    setOptions(localOptions)
+    setExpensesList(localExpenseList)
+    if (resetInputs) {
+      setToIntitalState()
+    }
+  }
+  const deleteItem = (currentIndex, value) => {
+    listItems.splice(currentIndex, 1)
+    setListItems([...listItems])
+    updateExpenseList(value, true)
+  }
+  const editItem = (index, value) => {
+    setName(value.name)
+    setAmount(value.amount)
+    setSelectedOption(value.selectedOption)
+    updateExpenseList(value, false)
+    listItems.splice(index, 1)
+    setListItems([...listItems])
   }
   const addExpenseDetails = (data) => {
 
@@ -248,8 +366,16 @@ function Expenses () {
             {listItems.map((value, index) => (
               <ListItem key={index}>
                 <ListItemText
-                  primary={`${t('Expense')} (${index + 1}) : ${value.name} , ${value.amount} ${value.expenseDetails ? getValue(value.expenseDetails, true) : getValue(value.selectedOption)}`}
+                  primary={`${t('Expense')} (${index + 1}) : ${value.name} , ${value.amount} ${value.expenseDetails && value.expenseDetails.text ? getValue(value.expenseDetails.text, true) : getValue(value.selectedOption)}`}
                 />
+                {!disabledSubmit && <IconButton data-testid='expenseEditItem' onClick={() => { editItem(index, value) }} edge="end" className='editItem' aria-label="delete">
+                  <EditIcon />
+                </IconButton>}
+                {!disabledSubmit && <ListItemSecondaryAction data-testid='expenseDeleteItem' onClick={() => { deleteItem(index, value) }} >
+                  <IconButton edge="end" aria-label="delete">
+                    <DeleteIcon />
+                  </IconButton>
+                </ListItemSecondaryAction>}
               </ListItem>
             ))}
           </List>
@@ -278,7 +404,7 @@ function Expenses () {
               incomeList={incomeList}
               resetModal={handleClose}
               addExpenseDetails={addExpenseDetails}
-              currentContributionList={contributionList}
+              currentExpenseList={expensesList}
               currentIncomeSource={selectedOption}/>}
     </Grid>
   )

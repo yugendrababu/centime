@@ -261,3 +261,42 @@ test('test for submit button action', () => {
   const Item = getByText('Expense (1) : bill , 9000 (From : stocks)')
   expect(Item).toBeInTheDocument()
 })
+
+test('test for edit listem', () => {
+  const { getByTestId, getByText } = render(
+    <Provider store={store}>
+      <Expenses />
+    </Provider>
+  )
+  const nameInput = getByTestId('expenseName')
+  const amountInput = getByTestId('expenseAmount')
+  const selectInput = getByTestId('expenseSource')
+  const addButton = getByText(/ADD/i)
+  fireEvent.change(nameInput, { target: { value: 'bill' } })
+  fireEvent.change(selectInput, { target: { value: 'stocks' } })
+  fireEvent.change(amountInput, { target: { value: 9000 } })
+  fireEvent.click(addButton)
+  const editButton = getByTestId('expenseEditItem')
+  fireEvent.click(editButton)
+  expect(nameInput).toHaveValue('bill')
+  expect(amountInput).toHaveValue(9000)
+})
+
+test('test for delete listem', () => {
+  const { getByTestId, getByText } = render(
+    <Provider store={store}>
+      <Expenses />
+    </Provider>
+  )
+  const nameInput = getByTestId('expenseName')
+  const amountInput = getByTestId('expenseAmount')
+  const selectInput = getByTestId('expenseSource')
+  const addButton = getByText(/ADD/i)
+  fireEvent.change(nameInput, { target: { value: 'bill' } })
+  fireEvent.change(selectInput, { target: { value: 'stocks' } })
+  fireEvent.change(amountInput, { target: { value: 9000 } })
+  fireEvent.click(addButton)
+
+  const deleteButton = getByTestId('expenseDeleteItem')
+  fireEvent.click(deleteButton)
+})
