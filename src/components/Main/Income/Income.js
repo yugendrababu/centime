@@ -79,6 +79,7 @@ function Income () {
             inputProps={{
               'data-testid': 'incomeName'
             }}
+            disabled={disabled}
             variant="outlined"
             className="TextFieldPaddingRight"
             onChange={handleChange('name')} />
@@ -88,6 +89,7 @@ function Income () {
             label={t('Enter Amount')}
             size="small"
             type="number"
+            disabled={disabled}
             inputProps={{
               min: 1,
               'data-testid': 'incomeAmount'
