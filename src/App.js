@@ -7,6 +7,7 @@ import Paper from '@material-ui/core/Paper'
 import './App.css'
 
 function App () {
+  // component for loading Header , Income and Expenses , Sankey Chart
   return (
     <div style={{ overflowY: 'scroll', backgroundColor: 'rgb(172 177 188 / 30%)' }}>
       <Grid container alignItems="stretch" >

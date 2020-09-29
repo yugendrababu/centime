@@ -10,7 +10,7 @@ import * as actions from '../../redux/actions/actions'
 
 function Customchart () {
   const dispatch = useDispatch()
-  const data = useSelector(state => state.cashFlow.sankeyData)
+  const data = useSelector(state => state.cashFlow.sankeyData) // sankey data from the redux
   const [chartData, setChartData] = React.useState([])
   const [showChart, setShowChart] = React.useState(false)
   useEffect(() => {

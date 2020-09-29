@@ -41,7 +41,7 @@ export default function CustomModal (props) {
   const [totalIncome, setTotalIncome] = useState(0)
   const [expensesList, setExpensesList] = useState(currentExpenseList)
 
-  useEffect(() => {
+  useEffect(() => { // useeffect for income list from Expense component
     const localOptions = []
     const localCurrentIncomeList = {}
     Object.keys(incomeList).map((key) => {
@@ -56,7 +56,7 @@ export default function CustomModal (props) {
     setOptions([...localOptions])
   }, [incomeList])
 
-  const updateExpenseList = (incomeName, expenseName, currentAmount) => {
+  const updateExpenseList = (incomeName, expenseName, currentAmount) => { // store income contribution for a specific expense
     let localExpensesList = { ...expensesList }
     if (localExpensesList[expenseName]) {
       localExpensesList[expenseName].push({ incomeName, amount: currentAmount })
@@ -71,7 +71,7 @@ export default function CustomModal (props) {
     setIncomeSources(localIncomeSources)
     setExpensesList(localExpensesList)
   }
-  const updateIncomeSources = (incomeName, expenseName, currentAmount) => {
+  const updateIncomeSources = (incomeName, expenseName, currentAmount) => { // update the dispaly text and store contributions from each incomes
     const localIncomeSources = { ...incomeSources }
     if (localIncomeSources.text) {
       localIncomeSources.text += `${incomeName} : ${currentAmount} | `
@@ -88,7 +88,7 @@ export default function CustomModal (props) {
     }
     setIncomeSources(localIncomeSources)
   }
-  const updateOptions = (value, balance) => {
+  const updateOptions = (value, balance) => { // update dropdown options
     const localOptions = []
     for (var i = 0; i < options.length; i++) {
       if (options[i].label === value) {
@@ -102,7 +102,7 @@ export default function CustomModal (props) {
     setOptions(localOptions)
   }
 
-  const handleOptionChange = (event) => {
+  const handleOptionChange = (event) => { // hanlder for dropdown change
     const value = event.target.value
     if (value) {
       const income = totalIncome + currentIncomeList[value]
@@ -129,12 +129,12 @@ export default function CustomModal (props) {
       }
     }
   }
-  const cancelExpense = () => {
+  const cancelExpense = () => { // close dialog box
     setOpen(false)
     resetModal()
     setIncomeSources('')
   }
-  const addExpense = () => {
+  const addExpense = () => { // store the addtitional details in the redux
     const data = {
       expenseDetails: incomeSources,
       expensesList,

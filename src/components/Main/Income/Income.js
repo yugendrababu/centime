@@ -24,7 +24,7 @@ function Income () {
   const [listItems, setListItems] = useState([])
   const [enableEdit, setEnableEdit] = useState(false)
   const [disabled, setDisabled] = useState(false)
-  const handleChange = (option) => (event) => {
+  const handleChange = (option) => (event) => { // handler for saving income name and amount
     const value = event.target.value
     if (option === 'name') {
       setName(value)
@@ -32,14 +32,14 @@ function Income () {
       setAmount(value)
     }
   }
-  const saveValues = () => {
+  const saveValues = () => { // save incomes values to redux
     dispatch(actions.saveincomeFlowData(listItems))
     setDisabled(true)
   }
-  const clearValues = () => {
+  const clearValues = () => { // handler for clearing all income values
     setListItems([])
   }
-  const addIncomeDetails = () => {
+  const addIncomeDetails = () => { // handler for adding income values as list item
     listItems.push({ name, amount })
     setListItems([...listItems])
     setName('')
@@ -48,11 +48,11 @@ function Income () {
       setEnableEdit(false)
     }
   }
-  const deleteItem = (currentIndex) => {
+  const deleteItem = (currentIndex) => { // handler for deleting list item
     listItems.splice(currentIndex, 1)
     setListItems([...listItems])
   }
-  const editItem = (index) => {
+  const editItem = (index) => { // handler for editing list item
     setName(listItems[index].name)
     setAmount(listItems[index].amount)
     setEnableEdit(true)

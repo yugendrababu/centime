@@ -32,24 +32,9 @@ function Expenses () {
   const [totalAmount, setTotalAmount] = useState(0)
   const [open, setOpen] = useState(false)
   const [expensesList, setExpensesList] = useState({})
-  // const [contributionList, setContributionList] = useState([{ index: '', data: ['From', 'To,', 'cash'] }])
   const incomeFlowData = useSelector(state => state.cashFlow.incomeFlowData)
   const modifiedExpenseData = useSelector(state => state.cashFlow.modifiedExpenseData)
-  useEffect(() => {
-    // const testdata = [
-    //   {
-    //     name: 'salary',
-    //     amount: '10000'
-    //   },
-    //   {
-    //     name: 'stocks',
-    //     amount: '20000'
-    //   },
-    //   {
-    //     name: 'balance',
-    //     amount: '15000'
-    //   }
-    // ]
+  useEffect(() => { // get income values  from redux
     if (incomeFlowData.length) {
       const localList = {}
       let localTotalAmount = 0
@@ -73,7 +58,7 @@ function Expenses () {
       setOptions([...localOptions])
     }
   }, [incomeFlowData])
-  useEffect(() => {
+  useEffect(() => { // get additional details when entered amount is greater than the income - from dialog component
     if (modifiedExpenseData) {
       const { expenseDetails, expensesList: list, options: updatedOptions, currentIncomeList } = modifiedExpenseData
       setExpensesList(list)
@@ -86,13 +71,13 @@ function Expenses () {
       console.log(expenseDetails, list, updatedOptions)
     }
   }, [modifiedExpenseData])
-  const handleOptionChange = (event) => {
+  const handleOptionChange = (event) => { // handler for saving income selection for dropdown
     const value = event.target.value
     if (value) {
       setSelectedOption(value)
     }
   }
-  const handleChange = (option) => (event) => {
+  const handleChange = (option) => (event) => { // handler for saving expense name and amount
     const value = event.target.value
     if (option === 'name') {
       setName(value)
@@ -100,25 +85,25 @@ function Expenses () {
       setAmount(value)
     }
   }
-  const handleClose = () => {
+  const handleClose = () => { // close dialog
     setOpen(false)
   }
-  const handleOpen = () => {
+  const handleOpen = () => { // open dialog
     setOpen(true)
   }
-  const setToIntitalState = () => {
+  const setToIntitalState = () => { // set to empty values
     setName('')
     setAmount('')
     setSelectedOption('')
   }
-  const getValues = (expense, array) => {
+  const getValues = (expense, array) => { // handler to grab contribution list for array
     const list = []
     array.map(item => {
       list.push([item.incomeName, expense, parseInt(item.amount)])
     })
     return list
   }
-  const saveValues = () => {
+  const saveValues = () => { // send contribution list to redux
     let contributionList = [['From', 'To,', 'cash']]
     Object.keys(expensesList).map(key => {
       contributionList = [...contributionList, ...getValues(key, expensesList[key])]
@@ -133,7 +118,7 @@ function Expenses () {
       setDisabledSubmit(true)
     }
   }
-  const updateOptions = (value, balance) => {
+  const updateOptions = (value, balance) => { // update dropdown values
     const localOptions = []
     for (var i = 0; i < options.length; i++) {
       if (options[i].label === value) {
@@ -146,7 +131,7 @@ function Expenses () {
     }
     setOptions(localOptions)
   }
-  const pushToExpenseList = () => {
+  const pushToExpenseList = () => { // store income and expense contributions
     let localExpensesList = { ...expensesList }
     if (localExpensesList[name]) {
       localExpensesList[name].push({ incomeName: selectedOption, amount })
@@ -158,7 +143,7 @@ function Expenses () {
     }
     setExpensesList(localExpensesList)
   }
-  const addIncomeDetails = () => {
+  const addIncomeDetails = () => { // add expense details to list item
     const localAmount = parseInt(amount)
     if (totalAmount < localAmount) {
       let text = ''
@@ -203,7 +188,7 @@ function Expenses () {
     }
     setIncomeList(incomeList)
   }
-  const updateExpenseList = (expense, resetInputs) => {
+  const updateExpenseList = (expense, resetInputs) => { // update list itemd - during edit item and delete Item
     let localTotalamount = 0
     const localOptions = []
     const copyIncomeList = { ...incomeList }
@@ -255,12 +240,12 @@ function Expenses () {
       setToIntitalState()
     }
   }
-  const deleteItem = (currentIndex, value) => {
+  const deleteItem = (currentIndex, value) => { // handler for delete list item
     listItems.splice(currentIndex, 1)
     setListItems([...listItems])
     updateExpenseList(value, true)
   }
-  const editItem = (index, value) => {
+  const editItem = (index, value) => { // handler for edit list item
     setName(value.name)
     setAmount(value.amount)
     setSelectedOption(value.selectedOption)
@@ -268,10 +253,7 @@ function Expenses () {
     listItems.splice(index, 1)
     setListItems([...listItems])
   }
-  const addExpenseDetails = (data) => {
-
-  }
-  const getValue = (value, option) => {
+  const getValue = (value, option) => { // format list item display
     if (value && !option) {
       return `(From : ${value})`
     }
@@ -403,7 +385,6 @@ function Expenses () {
               currentExpense={{ name, amount }}
               incomeList={incomeList}
               resetModal={handleClose}
-              addExpenseDetails={addExpenseDetails}
               currentExpenseList={expensesList}
               currentIncomeSource={selectedOption}/>}
     </Grid>

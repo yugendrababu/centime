@@ -5,6 +5,7 @@ import Income from './Income/Income'
 import Paper from '@material-ui/core/Paper'
 
 function IncomeAndExpenses () {
+  // wrapper for Income and Expenses components
   return (
     <Grid container>
       <Grid item xs={12}>
