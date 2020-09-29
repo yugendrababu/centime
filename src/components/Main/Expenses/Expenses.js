@@ -29,13 +29,13 @@ function Expenses () {
   const [totalAmount, setTotalAmount] = useState(0)
   const [open, setOpen] = useState(false)
   const [contributionList, setContributionList] = useState([['From', 'To,', 'cash']])
-  const cashFlowData = useSelector(state => state.cashFlow.cashFlowData)
+  const incomeFlowData = useSelector(state => state.cashFlow.incomeFlowData)
   const modifiedExpenseData = useSelector(state => state.cashFlow.modifiedExpenseData)
   useEffect(() => {
-    if (cashFlowData.length) {
+    if (incomeFlowData.length) {
       const localList = {}
       let localTotalAmount = 0
-      cashFlowData.map((data) => {
+      incomeFlowData.map((data) => {
         if (localList[data.name]) {
           localList[data.name] += parseInt(data.amount)
         } else {
@@ -54,7 +54,7 @@ function Expenses () {
       setTotalAmount(localTotalAmount)
       setOptions([...localOptions])
     }
-  }, [cashFlowData])
+  }, [incomeFlowData])
   useEffect(() => {
     if (modifiedExpenseData) {
       const { expenseDetails, contributionList: list, options: updatedOptions, currentIncomeList } = modifiedExpenseData
@@ -95,7 +95,9 @@ function Expenses () {
   }
   const saveValues = () => {
     dispatch(actions.saveSankeyData(contributionList))
-    setDisabledSubmit(true)
+    if (totalAmount <= 0) {
+      setDisabledSubmit(true)
+    }
   }
   const updateOptions = (value, balance) => {
     const localOptions = []

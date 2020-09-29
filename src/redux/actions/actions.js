@@ -1,7 +1,7 @@
 import constants from './constants'
 
-export const saveCashFlowData = (data) =>
-  ({ type: constants.SAVE_CASH_FLOW_DATA, payload: data })
+export const saveincomeFlowData = (data) =>
+  ({ type: constants.SAVE_INCOME_FLOW_DATA, payload: data })
 
 export const saveSankeyData = (data) => ({
   type: constants.SAVE_SANKEY_DATA, payload: data

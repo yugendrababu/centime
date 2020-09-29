@@ -5,32 +5,32 @@ describe('cash flow reducer', () => {
   it('should return the initial state', () => {
     expect(cashFlowReducer(undefined, {})).toEqual(
       {
-        cashFlowData: {},
-        sankeyData: '',
+        incomeFlowData: {},
+        sankeyData: [],
         modifiedExpenseData: ''
       })
   })
 
-  it('should handle SAVE_CASH_FLOW_DATA', () => {
+  it('should handle SAVE_INCOME_FLOW_DATA', () => {
     const initialState = {
-      cashFlowData: {},
+      incomeFlowData: {},
       sankeyData: ''
     }
     const data = [{ name: 'stocks', amount: 1800 }]
     expect(
       cashFlowReducer(initialState, {
-        type: constants.SAVE_CASH_FLOW_DATA,
+        type: constants.SAVE_INCOME_FLOW_DATA,
         payload: data
       })
     ).toEqual(
       {
-        cashFlowData: data,
+        incomeFlowData: data,
         sankeyData: ''
       })
   })
   it('should handle SAVE_SANKEY_DATA', () => {
     const initialState = {
-      cashFlowData: {},
+      incomeFlowData: {},
       sankeyData: ''
     }
     const data = [['From', 'To,', 'cash'], ['stocks', 'bill', 200], ['salary', 'bill', 200]]
@@ -42,12 +42,12 @@ describe('cash flow reducer', () => {
     ).toEqual(
       {
         sankeyData: data,
-        cashFlowData: {}
+        incomeFlowData: {}
       })
   })
   it('should handle SAVE_SANKEY_DATA', () => {
     const initialState = {
-      cashFlowData: {},
+      incomeFlowData: {},
       sankeyData: '',
       modifiedExpenseData: ''
     }
@@ -60,7 +60,7 @@ describe('cash flow reducer', () => {
     ).toEqual(
       {
         sankeyData: '',
-        cashFlowData: {},
+        incomeFlowData: {},
         modifiedExpenseData: data
       })
   })

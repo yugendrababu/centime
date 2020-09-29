@@ -5,10 +5,10 @@ describe('actions', () => {
   it('should create an action to save cash flow data', () => {
     const data = [{ name: 'stocks', amount: 1800 }]
     const expectedAction = {
-      type: constants.SAVE_CASH_FLOW_DATA,
+      type: constants.SAVE_INCOME_FLOW_DATA,
       payload: data
     }
-    expect(actions.saveCashFlowData(data)).toEqual(expectedAction)
+    expect(actions.saveincomeFlowData(data)).toEqual(expectedAction)
   })
 })
 

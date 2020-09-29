@@ -201,7 +201,6 @@ export default function CustomModal (props) {
 }
 
 CustomModal.propTypes = {
-  title: PropTypes.string.isRequired,
   openState: PropTypes.bool,
   incomeList: PropTypes.object,
   currentIncomeSource: PropTypes.string,

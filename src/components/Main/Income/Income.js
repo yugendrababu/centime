@@ -31,7 +31,7 @@ function Income () {
     }
   }
   const saveValues = () => {
-    dispatch(actions.saveCashFlowData(listItems))
+    dispatch(actions.saveincomeFlowData(listItems))
     setDisabled(true)
   }
   const clearValues = () => {

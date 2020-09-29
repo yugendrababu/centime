@@ -24,7 +24,7 @@ i18n
 
 const initialState = {
   cashFlow: {
-    cashFlowData: {},
+    incomeFlowData: {},
     sankeyData: ''
   }
 }
@@ -53,7 +53,7 @@ test('test for no options text', () => {
 test('test for Language select', () => {
   const initialState = {
     cashFlow: {
-      cashFlowData: {},
+      incomeFlowData: {},
       sankeyData: [
         ['From', 'To,', 'cash'],
         ['stocks', 'bill', 6000],

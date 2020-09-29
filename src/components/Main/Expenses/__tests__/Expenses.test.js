@@ -33,7 +33,7 @@ const data = [
 ]
 const initialState = {
   cashFlow: {
-    cashFlowData: data,
+    incomeFlowData: data,
     sankeyData: '',
     modifiedExpenseData: ''
   }
