@@ -10,3 +10,7 @@ export const saveSankeyData = (data) => ({
 export const sendExpenseData = (data) => ({
   type: constants.SEND_EXPENSE_DATA, payload: data
 })
+
+export const getApiData = (data) => ({
+  type: constants.GET_API_DATA
+})

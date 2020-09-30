@@ -2,8 +2,8 @@ import { Grid } from '@material-ui/core'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import * as actions from '../../../redux/actions/actions'
 import { useTranslation } from 'react-i18next'
 import List from '@material-ui/core/List'
@@ -24,6 +24,16 @@ function Income () {
   const [listItems, setListItems] = useState([])
   const [enableEdit, setEnableEdit] = useState(false)
   const [disabled, setDisabled] = useState(false)
+  const apiListItems = useSelector((state) => state.cashFlow.apiData)
+  useEffect(() => { // fetch data from mock api
+    dispatch(actions.getApiData())
+  }, [])
+
+  useEffect(() => { // set list items from mock api data
+    if (apiListItems.length > 0) {
+      setListItems(apiListItems)
+    }
+  }, [apiListItems])
   const handleChange = (option) => (event) => { // handler for saving income name and amount
     const value = event.target.value
     if (option === 'name') {

@@ -7,7 +7,8 @@ describe('cash flow reducer', () => {
       {
         incomeFlowData: {},
         sankeyData: [],
-        modifiedExpenseData: ''
+        modifiedExpenseData: '',
+        apiData: []
       })
   })
 

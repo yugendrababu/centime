@@ -119,7 +119,7 @@ test('test for add button', () => {
   fireEvent.change(amountInput, { target: { value: 1000 } })
   fireEvent.click(addButton)
   const listItem = getByText((content, node) => {
-    const hasText = (node) => node.textContent === 'Income Source (1) : salary , 1000'
+    const hasText = (node) => node.textContent === 'Income Source (3) : salary , 1000'
     const nodeHasText = hasText(node)
     const childrenDontHaveText = Array.from(node.children).every(
       (child) => !hasText(child)
